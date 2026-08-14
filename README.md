@@ -9,6 +9,7 @@ Shopping brand landing site + QuickFynd Express courier ops (dashboard, rider AP
 ## What's here
 
 - **Next.js landing page** — brand hero, platform story, all 10 modules, how it works
+- **[docs/API.md](docs/API.md)** — shareable live API reference  
 - **[docs/APPLICATION.md](docs/APPLICATION.md)** — how this app works today (booking, dashboards, APIs)
 - **[docs/PLATFORM.md](docs/PLATFORM.md)** — full product specs so each module can be built as separate software
 

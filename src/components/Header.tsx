@@ -12,6 +12,9 @@ export function Header() {
             <Link href="/logistics" className="hover:text-brand">
               Book
             </Link>
+            <Link href="/developers" className="hover:text-brand">
+              API
+            </Link>
             <Link href="/track" className="hover:text-brand">
               Track
             </Link>

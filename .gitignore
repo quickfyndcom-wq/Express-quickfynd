@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Contains live API keys — share privately, do not push
+docs/FLUTTER_DEVELOPER_HANDOFF.md
+
 # vercel
 .vercel
 

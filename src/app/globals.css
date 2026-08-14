@@ -1,26 +1,270 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0a0a0a;
+  --ink-soft: #1a1a1a;
+  --mist: #f2f2f2;
+  --paper: #fafafa;
+  --brand: #e61e43;
+  --brand-deep: #c70039;
+  --signal: #e61e43;
+  --signal-deep: #c70039;
+  --route: #e61e43;
+  --muted: #5c5c5c;
+  --line: #d4d4d4;
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-mist: var(--mist);
+  --color-paper: var(--paper);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-signal: var(--signal);
+  --color-signal-deep: var(--signal-deep);
+  --color-route: var(--route);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-syne);
+  --font-sans: var(--font-manrope);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+@keyframes route-draw {
+  from {
+    stroke-dashoffset: 400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.7;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-up-delay-1 {
+  animation: fade-up 0.7s ease-out 0.12s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.7s ease-out 0.24s both;
+}
+
+.animate-fade-up-delay-3 {
+  animation: fade-up 0.7s ease-out 0.36s both;
+}
+
+.animate-route {
+  stroke-dasharray: 400;
+  animation: route-draw 2.2s ease-out forwards;
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 5s ease-in-out infinite;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.animate-hero-zoom {
+  animation: hero-zoom 8s ease-out both;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.module-row {
+  transition: background-color 0.25s ease, padding-left 0.25s ease;
+}
+
+.module-row:hover {
+  background-color: rgba(255, 122, 24, 0.06);
+  padding-left: 0.75rem;
+}
+
+/* Soft ops dashboard — balanced palette (not red-only) */
+.console-shell {
+  --gc-ink: #0f172a;
+  --gc-ink-soft: #334155;
+  --gc-muted: #64748b;
+  --gc-line: #e2e8f0;
+  --gc-soft: #f1f5f9;
+  --gc-tint: #ecfdf5;
+  --gc-accent: #0f766e;
+  --gc-sky: #0284c7;
+  --gc-amber: #d97706;
+  --gc-canvas: #eef2f7;
+  --cs-ink: var(--gc-ink);
+  --cs-ink-soft: var(--gc-ink-soft);
+  --cs-muted: var(--gc-muted);
+  --cs-line: var(--gc-line);
+  --cs-soft: var(--gc-soft);
+  --cs-tint: var(--gc-tint);
+  --as-ink: var(--gc-ink);
+  --as-ink-soft: var(--gc-ink-soft);
+  --as-muted: var(--gc-muted);
+  --as-line: var(--gc-line);
+  --as-soft: var(--gc-soft);
+  --as-tint: var(--gc-tint);
+  background:
+    radial-gradient(ellipse 60% 45% at 0% 0%, rgba(15, 118, 110, 0.07), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(2, 132, 199, 0.06), transparent 50%),
+    var(--gc-canvas);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+.soft-card {
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.console-card {
+  animation: fade-up 0.45s ease-out both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.console-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.07);
+}
+
+.console-nav {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.console-cta {
+  background: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.28);
+}
+
+.console-cta:hover {
+  filter: brightness(1.05);
+}
+
+.console-promo {
+  background: linear-gradient(145deg, #0f172a 0%, #134e4a 55%, #0e7490 100%);
+}
+
+.console-hero-card {
+  background: linear-gradient(145deg, #0f766e 0%, #155e75 55%, #1e3a5f 100%);
+  box-shadow: 0 18px 40px rgba(15, 118, 110, 0.28);
+}
+
+.customer-shell,
+.admin-shell {
+  --cs-ink: var(--gc-ink);
+  --cs-ink-soft: var(--gc-ink-soft);
+  --cs-muted: var(--gc-muted);
+  --cs-line: var(--gc-line);
+  --cs-soft: var(--gc-soft);
+  --cs-tint: var(--gc-tint);
+  --as-ink: var(--gc-ink);
+  --as-ink-soft: var(--gc-ink-soft);
+  --as-muted: var(--gc-muted);
+  --as-line: var(--gc-line);
+  --as-soft: var(--gc-soft);
+  --as-tint: var(--gc-tint);
+}
+
+.admin-card {
+  animation: fade-up 0.45s ease-out both;
+}
+
+body {
+  --sb-track-color: #232E33;
+  --sb-thumb-color: #6BAF8D;
+  --sb-size: 0px;
+}
+
+body::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
 }

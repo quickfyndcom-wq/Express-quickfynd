@@ -1,33 +1,132 @@
-# QuickFynd Express — API (share this)
+# QuickFynd Express — Complete API document
 
-**Live app:** [https://express-quickfynd-iawj.vercel.app](https://express-quickfynd-iawj.vercel.app)  
-**API base:** `https://express-quickfynd-iawj.vercel.app/api`  
-**Brand:** QuickFynd Express · **Legal:** NILAAS · GSTIN `32JWYPS4831L1Z1`
+**Share this file:** [docs/API.md](https://github.com/quickfyndcom-wq/Express-quickfynd/blob/main/docs/API.md)  
+**Live page:** https://express-quickfynd-iawj.vercel.app/developers  
+**Live app:** https://express-quickfynd-iawj.vercel.app  
+**API base:** `https://express-quickfynd-iawj.vercel.app`
 
-JSON over HTTPS. No API key required for these demo routes.  
-**Note:** delivery data is in-memory on the server. A Vercel restart or a different serverless instance can reset demo jobs.
+Brand: **QuickFynd Express** · Legal: **NILAAS** · GSTIN `32JWYPS4831L1Z1`
 
-Public docs page: [https://express-quickfynd-iawj.vercel.app/developers](https://express-quickfynd-iawj.vercel.app/developers)
+JSON, `Content-Type: application/json`. Demo routes do not require an API key.  
+Delivery jobs live **in memory** (a new Vercel instance can reset data).
 
----
-
-## 1. Product URLs
-
-| Page | URL |
-|------|-----|
-| Home | https://express-quickfynd-iawj.vercel.app/ |
-| Book courier | https://express-quickfynd-iawj.vercel.app/logistics |
-| Track | https://express-quickfynd-iawj.vercel.app/track/{AWB} |
-| Merchant login | https://express-quickfynd-iawj.vercel.app/login |
-| Super Admin | https://express-quickfynd-iawj.vercel.app/super-admin/login |
+Local: `http://localhost:3000` (same paths).
 
 ---
 
-## 2. Health
+## Index — every endpoint
 
-```http
-GET /api/v1/health
-```
+### A. Health
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/health` |
+| GET | `/api/v1/supabase/health` |
+
+### B. Customer logistics (public courier)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/logistics/services` |
+| POST | `/api/v1/logistics/quote` |
+| GET | `/api/v1/logistics/nearby` |
+| POST | `/api/v1/logistics/nearby` |
+| GET | `/api/v1/logistics/book` |
+| POST | `/api/v1/logistics/book` |
+| POST | `/api/v1/logistics/request-rider` |
+| POST | `/api/v1/logistics/rate` |
+| GET | `/api/v1/logistics/places` |
+| POST | `/api/v1/logistics/places` |
+| POST | `/api/v1/public/book` |
+| POST | `/api/v1/quote` |
+| GET | `/api/v1/track/{awb}` |
+
+### C. Company deliveries
+
+| Method | Path | Notes |
+|--------|------|--------|
+| GET | `/api/v1/deliveries` | `?company=&status=&source=&q=&seller=` |
+| POST | `/api/v1/deliveries` | Header `x-org-slug` or `x-org-id` |
+| GET | `/api/v1/deliveries/{id}` | id or AWB |
+| DELETE | `/api/v1/deliveries/{id}` | |
+| POST | `/api/v1/deliveries/{id}/dispatch` | Offer next rider |
+| POST | `/api/v1/deliveries/{id}/accept` | Accept or decline |
+| POST | `/api/v1/deliveries/{id}/status` | Advance status |
+| POST | `/api/v1/deliveries/{id}/otp` | Pickup / delivery OTP |
+
+### D. Shipments (ecommerce alias)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/shipments` |
+| POST | `/api/v1/shipments` |
+| GET | `/api/v1/shipments/{awb}` |
+| POST | `/api/v1/shipments/{awb}/status` |
+
+### E. Ops, riders, network
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/ops/live` |
+| GET | `/api/v1/stats` |
+| GET | `/api/v1/riders` |
+| POST | `/api/v1/riders` |
+| DELETE | `/api/v1/riders?id=` |
+| POST | `/api/v1/riders/gps` |
+| GET | `/api/v1/zones` |
+| DELETE | `/api/v1/zones?id=` |
+| GET | `/api/v1/sellers` |
+| GET | `/api/v1/pricing` |
+| GET | `/api/admin/ops` |
+
+### F. Companies (orgs)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/orgs` |
+| GET | `/api/v1/orgs?email=` |
+| POST | `/api/v1/orgs` |
+| GET | `/api/v1/orgs/{id}` |
+| PATCH | `/api/v1/orgs/{id}` |
+| DELETE | `/api/v1/orgs/{id}` |
+| GET | `/api/v1/organizations` |
+
+### G. Records & webhooks
+
+| Method | Path |
+|--------|------|
+| DELETE | `/api/v1/records?type=&id=` |
+| GET | `/api/v1/webhooks/demo` |
+| POST | `/api/v1/webhooks/demo` |
+
+### H. Rider mobile app
+
+Header after login: `Authorization: Bearer {token}`
+
+| Method | Path |
+|--------|------|
+| POST | `/api/rider/auth/login` |
+| GET | `/api/rider/me` |
+| POST | `/api/rider/attendance/check-in` |
+| POST | `/api/rider/attendance/check-out` |
+| GET | `/api/rider/pickups` |
+| GET | `/api/rider/deliveries` |
+| POST | `/api/rider/scan` |
+| GET | `/api/rider/gps` |
+| POST | `/api/rider/gps` |
+| POST | `/api/rider/otp/send` |
+| POST | `/api/rider/otp/verify` |
+| POST | `/api/rider/pod` |
+| POST | `/api/rider/cod/collect` |
+| POST | `/api/rider/delivery/failed` |
+| GET | `/api/rider/settlement` |
+| POST | `/api/rider/settlement` |
+| GET | `/api/rider/tasks/{id}/navigation` |
+| GET | `/api/rider/tasks/{id}/customer` |
+
+---
+
+## 1. Health
 
 ```bash
 curl https://express-quickfynd-iawj.vercel.app/api/v1/health
@@ -35,58 +134,33 @@ curl https://express-quickfynd-iawj.vercel.app/api/v1/health
 
 ---
 
-## 3. Customer logistics (anyone can book)
+## 2. Customer logistics
 
-Same flow as the website: service → pickup/drop → quote → nearby partners → book → track.
+### GET `/api/v1/logistics/services`
 
-### Catalogue
+Services, goods types, Kozhikode places, assign modes (`quick` / `choose`).
 
-```http
-GET /api/v1/logistics/services
-```
-
-Returns services (bike, auto, van, truck, parcel, movers), goods types, places, assign modes.
-
-### Quote / recommended vehicle
-
-```http
-POST /api/v1/logistics/quote
-Content-Type: application/json
-```
+### POST `/api/v1/logistics/quote`
 
 ```json
 {
   "pickup": { "lat": 11.2588, "lng": 75.7804 },
   "drop": { "lat": 11.18, "lng": 75.83 },
   "weightKg": 2,
-  "goods": "Electronics",
-  "vehicle": "bike"
+  "goods": "Electronics"
 }
 ```
 
-### Nearby partners (privacy: first name, rating, ETA — no phone)
+Returns recommended vehicle and fare quotes.
 
-```http
-POST /api/v1/logistics/nearby
-Content-Type: application/json
-```
+### GET or POST `/api/v1/logistics/nearby`
 
-```json
-{ "lat": 11.2588, "lng": 75.7804, "vehicle": "bike" }
-```
+Query: `?lat=&lng=&vehicle=`  
+Body: `{ "lat": 11.2588, "lng": 75.7804, "vehicle": "bike" }`
 
-```bash
-curl -X POST https://express-quickfynd-iawj.vercel.app/api/v1/logistics/nearby \
-  -H "Content-Type: application/json" \
-  -d "{\"lat\":11.2588,\"lng\":75.7804,\"vehicle\":\"bike\"}"
-```
+Partner cards: first name, rating, vehicle, km, pickup ETA, trips. **No phone.**
 
-### Create booking
-
-```http
-POST /api/v1/logistics/book
-Content-Type: application/json
-```
+### POST `/api/v1/logistics/book`
 
 ```json
 {
@@ -115,21 +189,14 @@ Content-Type: application/json
 }
 ```
 
-`assignMode`: `"quick"` (default) or `"choose"` plus `preferredRiderId`.
+`assignMode`: `quick` or `choose` + `preferredRiderId`.  
+Response: `{ ok, awb, tracking_url, booking }`.
 
-Response includes `awb`, `tracking_url`, `booking`.
+### GET `/api/v1/logistics/book?phone=&status=&q=`
 
-### List bookings by mobile
+`status=active` for ongoing.
 
-```http
-GET /api/v1/logistics/book?phone=9876500001&status=active
-```
-
-### Request another partner
-
-```http
-POST /api/v1/logistics/request-rider
-```
+### POST `/api/v1/logistics/request-rider`
 
 ```json
 { "awb": "QFD12345601", "mode": "quick", "findAnother": true }
@@ -137,89 +204,36 @@ POST /api/v1/logistics/request-rider
 
 or `{ "awb": "...", "riderId": "RIDER102" }`
 
-### Rate + optional tip
-
-```http
-POST /api/v1/logistics/rate
-```
+### POST `/api/v1/logistics/rate`
 
 ```json
-{ "awb": "QFD12345601", "overall": 5, "tipInr": 20 }
+{ "awb": "QFD12345601", "overall": 5, "partner": 5, "speed": 4, "handling": 5, "behaviour": 5, "tipInr": 20 }
 ```
 
 ### Saved places
 
-```http
-GET  /api/v1/logistics/places?owner=guest
-POST /api/v1/logistics/places
-```
+`GET /api/v1/logistics/places?owner=`  
+`POST` `{ "owner", "label", "line", "city", "lat", "lng", "pincode" }`
 
-```json
-{
-  "owner": "9876500001",
-  "label": "Home",
-  "line": "Feroke",
-  "city": "Kozhikode",
-  "lat": 11.18,
-  "lng": 75.83
-}
-```
+### POST `/api/v1/public/book`
 
-### Legacy one-shot book
+Same as logistics book (legacy).
 
-```http
-POST /api/v1/public/book
-```
+### POST `/api/v1/quote`
 
-Same engine as logistics book.
+Simple price only.
+
+### GET `/api/v1/track/{awb}`
+
+Public tracking JSON. Page: `/track/{awb}`.
 
 ---
 
-## 4. Track (public, no login)
+## 3. Company deliveries
 
-```http
-GET /api/v1/track/{awb}
-GET /api/v1/quote
-```
+Headers: `x-org-slug: quickfynd` or `x-org-id`.
 
-```bash
-curl https://express-quickfynd-iawj.vercel.app/api/v1/track/QFD12345601
-```
-
-Web: `https://express-quickfynd-iawj.vercel.app/track/QFD12345601`
-
-Simple fare:
-
-```http
-POST /api/v1/quote
-```
-
-```json
-{
-  "pickup": { "lat": 11.2588, "lng": 75.7804 },
-  "drop": { "lat": 11.18, "lng": 75.83 },
-  "weightKg": 2,
-  "vehicle": "bike"
-}
-```
-
----
-
-## 5. Company / ecommerce deliveries
-
-Header: `x-org-slug: quickfynd` (or `x-org-id`, or `?company=quickfynd`)
-
-```http
-GET  /api/v1/deliveries?company=quickfynd&status=active
-POST /api/v1/deliveries
-POST /api/v1/deliveries/{awb}/dispatch
-POST /api/v1/deliveries/{awb}/accept
-POST /api/v1/deliveries/{awb}/status
-POST /api/v1/deliveries/{awb}/otp
-GET  /api/v1/deliveries/{awb}
-```
-
-**Create**
+### POST `/api/v1/deliveries`
 
 ```json
 {
@@ -244,45 +258,46 @@ GET  /api/v1/deliveries/{awb}
 }
 ```
 
-**Accept / decline**
+### POST `/api/v1/deliveries/{awb}/dispatch`
+
+Empty body. Offers the next ranked rider.
+
+### POST `/api/v1/deliveries/{awb}/accept`
 
 ```json
 { "riderId": "RIDER102", "accept": true }
 ```
 
-**Status** — e.g. `picked_up`, `out_for_delivery`, `delivered`
+`accept: false` or `decline: true` to refuse.
+
+### POST `/api/v1/deliveries/{awb}/status`
 
 ```json
-{ "status": "picked_up", "riderId": "RIDER102" }
+{ "status": "picked_up", "note": "Loaded" }
 ```
 
-**OTP**
+Statuses include: `ready_for_pickup`, `searching_rider`, `rider_assigned`, `going_to_pickup`, `picked_up`, `out_for_delivery`, `delivered`, `cancelled`, `failed`.
+
+### POST `/api/v1/deliveries/{awb}/otp`
 
 ```json
 { "kind": "pickup", "code": "4812" }
 ```
 
-`kind` is `pickup` or `delivery`. Omit `code` to (re)send.
+`kind`: `pickup` | `delivery`. Omit `code` to generate/send.
 
-Ecommerce-style alias: `POST /api/v1/shipments`, `GET /api/v1/shipments/{awb}`, `POST /api/v1/shipments/{awb}/status`.
+`POST /api/v1/shipments` is the same create flow for ecommerce sites.
 
 ---
 
-## 6. Live ops, riders, GPS
+## 4. Live ops and GPS
 
-```http
-GET  /api/v1/ops/live
-GET  /api/v1/riders
-GET  /api/v1/riders?online=1
-POST /api/v1/riders
-POST /api/v1/riders/gps
-GET  /api/v1/stats
-GET  /api/v1/zones
-GET  /api/v1/sellers
-GET  /api/v1/pricing
+```bash
+curl https://express-quickfynd-iawj.vercel.app/api/v1/ops/live
+curl https://express-quickfynd-iawj.vercel.app/api/v1/riders?online=1
 ```
 
-**GPS ping**
+### POST `/api/v1/riders/gps`
 
 ```json
 {
@@ -295,65 +310,61 @@ GET  /api/v1/pricing
 }
 ```
 
-Set duty: `{ "riderId": "RIDER102", "online": true }`
+### POST `/api/v1/riders`
+
+```json
+{ "riderId": "RIDER102", "online": true }
+```
 
 ---
 
-## 7. Rider app (`/api/rider`)
+## 5. Rider app
 
-Demo login (in-memory):
-
-```http
-POST /api/rider/auth/login
-```
+### POST `/api/rider/auth/login`
 
 ```json
 { "email": "rider@quickfynd.com", "password": "rider123" }
 ```
 
-Then `Authorization: Bearer {token}` on:
+Returns `{ token, rider }`. Use `Authorization: Bearer {token}`.
 
-| Method | Path |
-|--------|------|
-| GET | `/api/rider/me` |
-| POST | `/api/rider/attendance/check-in` |
-| POST | `/api/rider/attendance/check-out` |
-| GET | `/api/rider/pickups` |
-| GET | `/api/rider/deliveries` |
-| POST | `/api/rider/scan` |
-| POST | `/api/rider/gps` |
-| POST | `/api/rider/otp/send` |
-| POST | `/api/rider/otp/verify` |
-| POST | `/api/rider/pod` |
-| POST | `/api/rider/cod/collect` |
-| POST | `/api/rider/delivery/failed` |
-| GET | `/api/rider/settlement` |
-| GET | `/api/rider/tasks/{id}/navigation` |
-| GET | `/api/rider/tasks/{id}/customer` |
+| Call | Body |
+|------|------|
+| POST scan | `{ "awb": "QFD12345601" }` |
+| POST gps | `{ "lat", "lng", "heading", "speed" }` |
+| POST otp/send | `{ "taskId" }` |
+| POST otp/verify | `{ "taskId", "otp" }` |
+| POST pod | `{ "taskId", "photoUrl", "otpVerified": true }` |
+| POST cod/collect | `{ "taskId", "amount" }` |
+| POST delivery/failed | `{ "taskId", "reason" }` |
 
 ---
 
-## 8. Other
+## 6. Orgs
+
+`GET /api/v1/orgs?email=` — find company by contact email.  
+`POST /api/v1/orgs` — register (pending until Super Admin approves).  
+`PATCH /api/v1/orgs/{id}` — approve / update (`status`: `pending` \| `active` \| `suspended`).
+
+---
+
+## 7. Delete records
 
 ```http
-GET|POST /api/v1/orgs
-GET|PATCH /api/v1/orgs/{id}
-GET /api/v1/organizations
-POST /api/v1/webhooks/demo
-DELETE /api/v1/records?type=delivery&id={awb}
-GET /api/v1/supabase/health
-GET /api/admin/ops
+DELETE /api/v1/records?type=delivery&id=QFD12345601
 ```
 
----
-
-## 9. Demo data
-
-After a fresh process start: companies QuickFynd / Nilaas / Local Mart, Kozhikode riders (example `RIDER102` Ahamed, bike), sample AWB `QFD12345601`.
+`type`: `delivery` | `company` | `rider` | `zone` | `ticket`
 
 ---
 
-## 10. Auth (web, not these JSON APIs)
+## 8. Demo data
 
-Merchant and Super Admin UI use **Firebase** (Google + email). Super Admin Gmail: `quickfynd.com@gmail.com`.  
-Do not put `SUPABASE_SECRET_KEY` in Flutter or public docs.
+Riders include `RIDER102` (Ahamed, bike). Sample AWB `QFD12345601`. Companies: QuickFynd, Nilaas, Local Mart.
+
+---
+
+## 9. Web login (not REST)
+
+Firebase Google / email on `/login`. Super Admin: `quickfynd.com@gmail.com`.  
+Never put `SUPABASE_SECRET_KEY` in Flutter or this document.

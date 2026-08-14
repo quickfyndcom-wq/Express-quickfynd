@@ -14,6 +14,58 @@ Local: `http://localhost:3000` (same paths).
 
 ---
 
+## Customer app home (choose vehicle + scooter available?)
+
+This matches the mobile home: pickup bar, tiles **Trucks / 2 Wheeler / Packers & Movers / Car**, then check if a scooter/bike partner is nearby.
+
+```text
+Open app
+   ↓
+GET /api/v1/logistics/home?lat=&lng=
+   ↓
+Show pickup + 4 tiles
+   ↓
+User taps 2 Wheeler
+   ↓
+GET /api/v1/logistics/nearby?vehicle=scooter
+   ↓
+scooter.available = true?  →  enter drop → quote → book
+                 = false?  →  “No scooter partner nearby”
+```
+
+### GET `/api/v1/logistics/home`
+
+```bash
+curl "https://express-quickfynd-iawj.vercel.app/api/v1/logistics/home?lat=11.2588&lng=75.7804"
+```
+
+Returns:
+
+- `pickup` — label, lat, lng  
+- `banner` — Packers & Movers promo  
+- `services[]` — each tile: `available`, `partnersNearby`, `nearestEtaMin`, `subtitle`  
+- `scooter` — `{ available, partnersNearby, nearestEtaMin, message }`  
+- `flow` — next API steps  
+
+`two_wheeler` uses **bike + scooter**. If `scooter.available` is true, a 2-wheeler delivery guy is nearby.
+
+Then:
+
+1. Drop location (app UI)  
+2. `POST /api/v1/logistics/quote`  
+3. `POST /api/v1/logistics/book` with `"vehicle": "scooter"` and `"assignMode": "quick"`  
+4. `GET /api/v1/track/{awb}`  
+
+To list the actual riders (first name, rating, ETA — no phone):
+
+```bash
+curl -X POST https://express-quickfynd-iawj.vercel.app/api/v1/logistics/nearby \
+  -H "Content-Type: application/json" \
+  -d "{\"lat\":11.2588,\"lng\":75.7804,\"vehicle\":\"scooter\"}"
+```
+
+---
+
 ## Index — every endpoint
 
 ### A. Health
@@ -27,6 +79,7 @@ Local: `http://localhost:3000` (same paths).
 
 | Method | Path |
 |--------|------|
+| GET | `/api/v1/logistics/home` |
 | GET | `/api/v1/logistics/services` |
 | POST | `/api/v1/logistics/quote` |
 | GET | `/api/v1/logistics/nearby` |

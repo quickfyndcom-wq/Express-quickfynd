@@ -93,7 +93,50 @@ export const PLACES = {
   "Medical College": { lat: 11.275, lng: 75.837, label: "Medical College", pincode: "673016" },
 } as const;
 
-export function recommendVehicle(weightKg: number, goods: string): VehicleType {
+export type AppHomeService = {
+  id: "trucks" | "two_wheeler" | "movers" | "car";
+  title: string;
+  blurb: string;
+  icon: string;
+  vehicle: VehicleType;
+  vehicles: VehicleType[];
+};
+
+/** Home grid like the customer app: Trucks / 2 Wheeler / Packers & Movers / Car */
+export const APP_HOME_SERVICES: AppHomeService[] = [
+  {
+    id: "trucks",
+    title: "Trucks",
+    blurb: "Mini truck, van and truck for goods",
+    icon: "truck",
+    vehicle: "truck",
+    vehicles: ["mini_van", "van", "truck"],
+  },
+  {
+    id: "two_wheeler",
+    title: "2 Wheeler",
+    blurb: "Bike and scooter for small parcels",
+    icon: "scooter",
+    vehicle: "scooter",
+    vehicles: ["bike", "scooter"],
+  },
+  {
+    id: "movers",
+    title: "Packers & Movers",
+    blurb: "House shifting and furniture",
+    icon: "movers",
+    vehicle: "van",
+    vehicles: ["van", "truck"],
+  },
+  {
+    id: "car",
+    title: "Car",
+    blurb: "Car for people or light goods",
+    icon: "car",
+    vehicle: "car",
+    vehicles: ["car"],
+  },
+];
   if (["Furniture", "Appliances", "Commercial Goods"].includes(goods) || weightKg >= 80) {
     return "van";
   }

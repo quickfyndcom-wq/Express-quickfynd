@@ -15,6 +15,7 @@ const GROUPS: { title: string; rows: { method: string; path: string; note: strin
   {
     title: "Customer logistics",
     rows: [
+      { method: "GET", path: "/api/v1/logistics/home", note: "Home tiles + scooter available?" },
       { method: "GET", path: "/api/v1/logistics/services", note: "Services, goods, places" },
       { method: "POST", path: "/api/v1/logistics/quote", note: "Fare + recommended vehicle" },
       { method: "GET/POST", path: "/api/v1/logistics/nearby", note: "Nearby partners (no phone)" },

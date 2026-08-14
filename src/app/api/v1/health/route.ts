@@ -8,6 +8,7 @@ export async function GET() {
     poweredBy: "Nilaas",
     endpoints: [
       "GET /api/v1/health",
+      "GET /api/v1/logistics/home",
       "GET /api/v1/logistics/services",
       "POST /api/v1/logistics/quote",
       "POST /api/v1/logistics/nearby",

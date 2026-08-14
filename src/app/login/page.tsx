@@ -33,6 +33,15 @@ function friendlyAuthError(err: unknown): string {
   if (code === "auth/unauthorized-domain") {
     return "Add this domain under Firebase Authentication → Settings → Authorized domains.";
   }
+  if (
+    code === "auth/requests-from-referer-blocked" ||
+    message.includes("requests-from-referer")
+  ) {
+    return "This Vercel domain is blocked on the Firebase API key. Add https://express-quickfynd-iawj.vercel.app/* as an HTTP referrer on the Browser / API key 3.";
+  }
+  if (message.toLowerCase().includes("requested action is invalid")) {
+    return "Google sign-in restarted. Use Continue with Google on this page — do not open the Firebase /__/auth/handler URL.";
+  }
   return message;
 }
 
@@ -116,7 +125,7 @@ function LoginForm() {
           disabled={busy}
           className="mt-8 w-full rounded-md bg-brand py-3 text-sm font-semibold text-white transition hover:bg-brand-deep disabled:opacity-60"
         >
-          {busy ? "Opening Google…" : "Continue with Google"}
+          {busy ? "Redirecting to Google…" : "Continue with Google"}
         </button>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">

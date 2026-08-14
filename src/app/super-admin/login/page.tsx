@@ -47,7 +47,7 @@ function AdminLoginForm() {
           disabled={busy}
           className="mt-8 w-full rounded-md bg-brand py-3 text-sm font-semibold text-white disabled:opacity-60"
         >
-          {busy ? "Redirecting to Google…" : "Continue with Google"}
+          {busy ? "Opening Google…" : "Continue with Google"}
         </button>
         {error ? (
           <p className="mt-4 text-sm text-brand" role="alert">

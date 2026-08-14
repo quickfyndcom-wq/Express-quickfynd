@@ -46,7 +46,7 @@ function friendlyAuthError(err: unknown): string {
 }
 
 function LoginForm() {
-  const { signInEmail, signInGoogle, user, loading, isSuperAdmin } = useAuth();
+  const { signInEmail, signInGoogle, user, loading, isSuperAdmin, redirectError } = useAuth();
   const router = useRouter();
   const search = useSearchParams();
   const adminMode = search.get("admin") === "1" || search.get("next") === "/super-admin";
@@ -56,10 +56,8 @@ function LoginForm() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (search.get("error") === "auth") {
-      setError("Sign-in failed. Check Firebase Authentication providers.");
-    }
-  }, [search]);
+    if (redirectError) setError(friendlyAuthError(new Error(redirectError)));
+  }, [redirectError]);
 
   useEffect(() => {
     if (loading || !user) return;
@@ -125,7 +123,7 @@ function LoginForm() {
           disabled={busy}
           className="mt-8 w-full rounded-md bg-brand py-3 text-sm font-semibold text-white transition hover:bg-brand-deep disabled:opacity-60"
         >
-          {busy ? "Redirecting to Google…" : "Continue with Google"}
+          {busy ? "Opening Google…" : "Continue with Google"}
         </button>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">

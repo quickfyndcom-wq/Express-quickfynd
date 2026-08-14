@@ -15,7 +15,6 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   signOut,
   type User,
 } from "firebase/auth";
@@ -26,6 +25,7 @@ type AuthContextValue = {
   user: User | null;
   loading: boolean;
   isSuperAdmin: boolean;
+  redirectError: string;
   signInEmail: (email: string, password: string) => Promise<void>;
   signUpEmail: (email: string, password: string) => Promise<void>;
   signInGoogle: (loginHint?: string) => Promise<void>;
@@ -44,28 +44,24 @@ function googleProvider(loginHint?: string) {
   return provider;
 }
 
-function useRedirectSignIn() {
-  if (typeof window === "undefined") return false;
-  return window.location.hostname.endsWith(".vercel.app");
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [redirectError, setRedirectError] = useState("");
 
   useEffect(() => {
-    let cancelled = false;
-    void getRedirectResult(auth).catch(() => undefined).finally(() => {
-      if (cancelled) return;
-    });
+    void getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) setUser(result.user);
+      })
+      .catch((err) => {
+        setRedirectError(err instanceof Error ? err.message : "Google sign-in failed");
+      });
     const unsub = onAuthStateChanged(auth, (next) => {
       setUser(next);
       setLoading(false);
     });
-    return () => {
-      cancelled = true;
-      unsub();
-    };
+    return () => unsub();
   }, []);
 
   const signInEmail = useCallback(async (email: string, password: string) => {
@@ -77,29 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInGoogle = useCallback(async (loginHint?: string) => {
-    const provider = googleProvider(loginHint);
-    if (useRedirectSignIn()) {
-      await signInWithRedirect(auth, provider);
-      return;
-    }
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      const code =
-        typeof err === "object" && err && "code" in err
-          ? String((err as { code: string }).code)
-          : "";
-      if (
-        code === "auth/popup-blocked" ||
-        code === "auth/popup-closed-by-user" ||
-        code === "auth/cancelled-popup-request" ||
-        code === "auth/unauthorized-domain"
-      ) {
-        await signInWithRedirect(auth, provider);
-        return;
-      }
-      throw err;
-    }
+    await signInWithPopup(auth, googleProvider(loginHint));
   }, []);
 
   const logout = useCallback(async () => {
@@ -111,12 +85,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       loading,
       isSuperAdmin: isSuperAdminEmail(user?.email),
+      redirectError,
       signInEmail,
       signUpEmail,
       signInGoogle,
       logout,
     }),
-    [user, loading, signInEmail, signUpEmail, signInGoogle, logout],
+    [user, loading, redirectError, signInEmail, signUpEmail, signInGoogle, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,5 +1,11 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getAuth, type Auth } from "firebase/auth";
+import {
+  getAuth,
+  initializeAuth,
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
+  type Auth,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,4 +34,16 @@ function createFirebaseApp(): FirebaseApp {
 
 const app = createFirebaseApp();
 
-export const auth: Auth = getAuth(app);
+function createAuth(): Auth {
+  if (typeof window === "undefined") return getAuth(app);
+  try {
+    return initializeAuth(app, {
+      persistence: browserLocalPersistence,
+      popupRedirectResolver: browserPopupRedirectResolver,
+    });
+  } catch {
+    return getAuth(app);
+  }
+}
+
+export const auth: Auth = createAuth();
